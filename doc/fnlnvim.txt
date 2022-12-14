@@ -4,16 +4,53 @@ fnlnvim.txt
 CONTENTS                                                        *fnlnvim-contents*
 
 1. fnlnvim.......................................................|fnlnvim-fnlnvim|
-    1.1. User Commands.....................................|fnlnvim-user_commands|
+    1.1. Installation.......................................|fnlnvim-installation|
+    1.2. Setup.....................................................|fnlnvim-setup|
+    1.3. User Commands.....................................|fnlnvim-user_commands|
+    1.4. Headless Mode.....................................|fnlnvim-headless_mode|
 
 ================================================================================
 FNLNVIM                                                          *fnlnvim-fnlnvim*
 
 This is a Fennel compiler that runs through Neovim.
+All Neovim Lua APIs are available.
+
+--------------------------------------------------------------------------------
+INSTALLATION                                                *fnlnvim-installation*
+
+With Packer:
+>
+    use "ec965/fnlnvim"
+<
+
+--------------------------------------------------------------------------------
+SETUP                                                              *fnlnvim-setup*
+
+You can add compiler options using the setup function.
+This is not strictly necessary.
+A list of compiler options is available in the fennel documentation (https://fennel-lang.org/api).
+>
+    require("fnlnvim").setup({
+      -- compiler options
+    })
+<
 
 --------------------------------------------------------------------------------
 USER COMMANDS                                              *fnlnvim-user_commands*
 
-*   `FnlNvimCompile`
-*   `FnlNvimEval`
+*   `FnlNvimCompile` - compile a file and print its outputs to stdout
+*   `FnlNvimEval` - evaluate a file and print its outputs to stdout
+
+--------------------------------------------------------------------------------
+HEADLESS MODE                                              *fnlnvim-headless_mode*
+
+Compile a file:
+>
+    nvim --headless -c "FnlNvimCompile ${INPUT}" +q > $OUTPUT
+<
+
+Evaluate a file:
+>
+    nvim --headless -c "FnlNvimEval ${INPUT}" +q
+<
 
