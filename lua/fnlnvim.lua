@@ -4,6 +4,11 @@ local _has_updated_macro_rtp = false
 local compiler_opts = {}
 local _debug_traceback = debug.traceback
 
+local function print_stdout(msg)
+	local lines = vim.fn.split(msg, "\n")
+	vim.fn.writefile(lines, "/dev/stdout")
+end
+
 local function clonetable(t)
 	return { unpack(t) }
 end
@@ -52,7 +57,7 @@ function M.eval(fnl, filename)
   local opts = get_compiler_opts(filename)
 
 	local result = fennel.eval(fnl, opts)
-	vim.notify(fennel.view(result))
+	print_stdout(fennel.view(result))
 
   debug.traceback = _debug_traceback
 end
@@ -68,7 +73,7 @@ function M.compile(input_file)
   local opts = get_compiler_opts(input_file)
 
 	local lua = fennel.compileString(fnl, opts)
-	vim.notify(lua)
+	print_stdout(lua)
 
   debug.traceback = _debug_traceback
 end
