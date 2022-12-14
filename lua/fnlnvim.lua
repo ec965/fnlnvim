@@ -64,6 +64,8 @@ function M.eval(fnl, filename)
 	local opts = get_compiler_opts(filename)
 
 	local result = fennel.eval(fnl, opts)
+	-- seperate eval prints from output
+	print("\n")
 	print_stdout(fennel.view(result))
 
 	teardown()
