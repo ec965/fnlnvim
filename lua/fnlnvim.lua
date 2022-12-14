@@ -4,6 +4,9 @@ local _has_updated_macro_rtp = false
 local compiler_opts = {}
 local _debug_traceback = debug.traceback
 
+--- print to stdout
+--- TODO: figure out a way to get this to work on Windows
+---@param msg string
 local function print_stdout(msg)
 	local lines = vim.fn.split(msg, "\n")
 	vim.fn.writefile(lines, "/dev/stdout")
@@ -18,11 +21,6 @@ local function get_compiler_opts(filename)
 	opts.filename = filename
   return opts
 end
-
-function M.setup(user_opts)
-	compiler_opts = user_opts
-end
-
 --- Update `fennel.macro-path` with runtimepaths
 --- We call this function during bootstrap and setup
 local function update_fnl_macro_rtp()
@@ -49,33 +47,41 @@ local function update_fnl_macro_rtp()
   _has_updated_macro_rtp = true
 end
 
-function M.eval(fnl, filename)
+local function setup_compiler()
 	local fennel = require("fennel")
   update_fnl_macro_rtp()
   debug.traceback = fennel.traceback
+	return fennel
+end
+
+local function teardown()
+  debug.traceback = _debug_traceback
+end
+
+function M.eval(fnl, filename)
+	local fennel = setup_compiler()
 
   local opts = get_compiler_opts(filename)
 
 	local result = fennel.eval(fnl, opts)
 	print_stdout(fennel.view(result))
 
-  debug.traceback = _debug_traceback
+	teardown()
 end
 
-function M.compile(input_file)
-	local fennel = require("fennel")
-  update_fnl_macro_rtp()
-  debug.traceback = fennel.traceback
+function M.compile(fnl, filename)
+	local fennel = setup_compiler()
 
-	local file_handle = assert(io.open(input_file))
-	local fnl = file_handle:read("*a")
-
-  local opts = get_compiler_opts(input_file)
+  local opts = get_compiler_opts(filename)
 
 	local lua = fennel.compileString(fnl, opts)
 	print_stdout(lua)
 
-  debug.traceback = _debug_traceback
+	teardown()
+end
+
+function M.setup(user_opts)
+	compiler_opts = user_opts
 end
 
 return M

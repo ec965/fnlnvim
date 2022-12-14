@@ -1,18 +1,21 @@
 local command = vim.api.nvim_create_user_command
 
-command("FnlNvimCompile", function(opts)
-	local input_file = opts.args
+local function read_file(input_file)
 	assert(input_file, "Input file is missing!")
+	local file_handle = assert(io.open(input_file))
+	return file_handle:read("*a")
+end
 
-	require("fnlnvim").compile(input_file)
+command("FnlNvimCompile", function(opts)
+	local fnl = read_file(opts.args)
+	local input_file = opts.args
+
+	require("fnlnvim").compile(fnl, input_file)
 end, { nargs = 1 })
 
 command("FnlNvimEval", function(opts)
+	local fnl = read_file(opts.args)
 	local input_file = opts.args
-	assert(input_file, "Input file is missing!")
-
-	local file_handle = assert(io.open(input_file))
-	local fnl = file_handle:read("*a")
 
 	require("fnlnvim").eval(fnl, input_file)
 end, { nargs = 1 })
