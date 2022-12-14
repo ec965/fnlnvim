@@ -19,14 +19,14 @@ end
 local function get_compiler_opts(filename)
 	local opts = clonetable(compiler_opts)
 	opts.filename = filename
-  return opts
+	return opts
 end
 --- Update `fennel.macro-path` with runtimepaths
 --- We call this function during bootstrap and setup
 local function update_fnl_macro_rtp()
-  if _has_updated_macro_rtp then
-    return
-  end
+	if _has_updated_macro_rtp then
+		return
+	end
 
 	local fennel = require("fennel")
 	local rtps = vim.api.nvim_list_runtime_paths()
@@ -44,24 +44,24 @@ local function update_fnl_macro_rtp()
 		end
 	end
 
-  _has_updated_macro_rtp = true
+	_has_updated_macro_rtp = true
 end
 
 local function setup_compiler()
 	local fennel = require("fennel")
-  update_fnl_macro_rtp()
-  debug.traceback = fennel.traceback
+	update_fnl_macro_rtp()
+	debug.traceback = fennel.traceback
 	return fennel
 end
 
 local function teardown()
-  debug.traceback = _debug_traceback
+	debug.traceback = _debug_traceback
 end
 
 function M.eval(fnl, filename)
 	local fennel = setup_compiler()
 
-  local opts = get_compiler_opts(filename)
+	local opts = get_compiler_opts(filename)
 
 	local result = fennel.eval(fnl, opts)
 	print_stdout(fennel.view(result))
@@ -72,7 +72,7 @@ end
 function M.compile(fnl, filename)
 	local fennel = setup_compiler()
 
-  local opts = get_compiler_opts(filename)
+	local opts = get_compiler_opts(filename)
 
 	local lua = fennel.compileString(fnl, opts)
 	print_stdout(lua)
