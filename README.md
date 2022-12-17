@@ -41,3 +41,6 @@ Evaluate a file:
 ```bash
 nvim --headless -c "FnlNvimEval ${INPUT}" +q
 ```
+
+For a more ergonomic setup, you can wrap the shell commands in a script.
+For example, I use a [python script](https://gist.github.com/ec965/bc1dd95aa31523e948e31ead5f9fdac5).
